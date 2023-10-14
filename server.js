@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const firebase = require('firebase/app');
-const { getAuth, createUserWithEmailAndPassword } = require("firebase/auth");
+const { getAuth, createUserWithEmailAndPassword, updateProfile } = require("firebase/auth");
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(__dirname));
@@ -30,14 +30,18 @@ app.post('/signup', (req, res) => {
     createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
             const user = userCredential.user;
-            user.providerData.forEach((profile) => {
-                console.log("Sign-in provider: " + profile.providerId);
-                console.log("  Provider-specific UID: " + profile.uid);
-                console.log("  Name: " + profile.displayName);
-                console.log("  Email: " + profile.email);
-                console.log("  Photo URL: " + profile.photoURL);
+
+            updateProfile(user, {
+                displayName: fullName
+              }).then(() => {
+                res.status(200).send("Logged and updated");
+              }).catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                console.error(errorCode, errorMessage);
+                res.status(401).send(`Update Failed: ${errorMessage}`);
               });
-            res.status(200).send("Logged");
+              
         })
         .catch((error) => {
             const errorCode = error.code;
