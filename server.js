@@ -25,6 +25,7 @@ app.get('/', (req, res) => {
 app.post('/signup', (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
+    const fullName = req.body.fullName;
 
     createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
