@@ -19,7 +19,7 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/index.html');
+    res.sendFile(__dirname + '../client/index.html');
 });
 
 app.post('/login', (req, res) => {
@@ -28,12 +28,10 @@ app.post('/login', (req, res) => {
 
     firebase.auth().signInWithEmailAndPassword(email, password)
         .then((userCredential) => {
-            // User signed in
             const user = userCredential.user;
             res.send(`Login Successful for ${user.email}`);
         })
         .catch((error) => {
-            // Handle errors
             const errorCode = error.code;
             const errorMessage = error.message;
             console.error(errorCode, errorMessage);
