@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const firebase = require('firebase/app');
-const { getAuth, createUserWithEmailAndPassword, updateProfile } = require("firebase/auth");
+const { getAuth, createUserWithEmailAndPassword, updateProfile, signInWithEmailAndPassword } = require("firebase/auth");
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(__dirname));
@@ -49,6 +49,24 @@ app.post('/signup', (req, res) => {
             console.error(errorCode, errorMessage);
             res.status(401).send(`Login Failed: ${errorMessage}`);
         });
+});
+
+app.post('/signin', (req, res) => {
+    const email = req.body.email;
+    const password = req.body.password;
+
+    signInWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+      const user = userCredential.user;
+      res.status(200).send("Logged and updated", user);
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.error(errorCode, errorMessage);
+    res.status(401).send(`Login Failed: ${errorMessage}`);
+    });
+  
 });
 
 const port = 3000;
