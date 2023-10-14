@@ -1,20 +1,21 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
-const firebase = require('firebase/app');
+import firebase from 'firebase'
 require('firebase/auth');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(__dirname));
 
 const firebaseConfig = {
-    apiKey: 'YOUR_API_KEY',
-    authDomain: 'YOUR_AUTH_DOMAIN',
-    projectId: 'YOUR_PROJECT_ID',
-    storageBucket: 'YOUR_STORAGE_BUCKET',
-    messagingSenderId: 'YOUR_MESSAGING_SENDER_ID',
-    appId: 'YOUR_APP_ID',
-};
+    apiKey: "AIzaSyAmnb2L3FMQ750ov2XmN2xhM9rcrgRywCc",
+    authDomain: "bell-1b138.firebaseapp.com",
+    projectId: "bell-1b138",
+    storageBucket: "bell-1b138.appspot.com",
+    messagingSenderId: "623467438376",
+    appId: "1:623467438376:web:16b2aaf94b95098621f01d",
+    measurementId: "G-443SD60H0V"
+  };
 
 firebase.initializeApp(firebaseConfig);
 
@@ -25,7 +26,6 @@ app.get('/', (req, res) => {
 app.post('/login', (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
-    console.log("Logging in")
 
     firebase.auth().signInWithEmailAndPassword(email, password)
         .then((userCredential) => {
