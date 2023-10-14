@@ -1,3 +1,4 @@
+const { getFirestore, collection, doc, setDoc } = require("firebase/firestore");
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
@@ -7,6 +8,7 @@ const {
   createUserWithEmailAndPassword,
   updateProfile,
   signInWithEmailAndPassword,
+  sendEmailVerification
 } = require("firebase/auth");
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -21,40 +23,42 @@ const firebaseConfig = {
   appId: "1:623467438376:web:16b2aaf94b95098621f01d",
   measurementId: "G-443SD60H0V",
 };
+
 firebase.initializeApp(firebaseConfig);
+
+const appFirebase = firebase.initializeApp(firebaseConfig);
+const db = getFirestore(appFirebase);
+
 const auth = getAuth();
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/client/index.html");
 });
 
-app.post("/signup", (req, res) => {
-  const email = req.body.email;
-  const password = req.body.password;
-  const fullName = req.body.fullName;
+app.post("/signup", async (req, res) => {
+    const email = req.body.email;
+    const password = req.body.password;
+    const fullName = req.body.fullName;
 
-  createUserWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      const user = userCredential.user;
+    try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
 
-      updateProfile(user, {
-        displayName: fullName,
-      })
-        .then(() => {
-          res.status(200).send("Logged and updated");
-        })
-        .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          console.error(errorCode, errorMessage);
-          res.status(401).send(`Update Failed: ${errorMessage}`);
-        });
-    })
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      console.error(errorCode, errorMessage);
-      res.status(401).send(`Login Failed: ${errorMessage}`);
-    });
+        const usersCollection = collection(db, "Users");
+        const userDoc = doc(usersCollection);
+
+        const userData = {
+            fullName: fullName,
+            email: email,
+        };
+
+        await setDoc(userDoc, userData);
+
+        res.status(200).send("Logged and updated");
+    } catch (error) {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.error(errorCode, errorMessage);
+        res.status(401).send(`Failed: ${errorMessage}`);
+    }
 });
 
 app.post("/signin", (req, res) => {
