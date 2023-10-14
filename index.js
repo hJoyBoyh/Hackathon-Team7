@@ -1,23 +1,21 @@
 
 
 const successCallback = (position) => {
-    console.log(position)
     const number = position.coords.longitude;
 
-
+    // Extract the sign (negative or positive)
     const sign = number < 0 ? '-' : '+';
 
-    const positiveNumber = Math.abs(number);
+    // Convert the number to a string
+    const numberString = Math.abs(number).toString();
 
+    // Extract the first five digits
+    const firstFiveDigits = numberString.substring(0, 6);
 
-    const numberString = positiveNumber.toString();
+    // Concatenate the sign and the first five digits
+    const result = sign + firstFiveDigits;
 
-    const match = numberString.match(/\d{5}/);
-
-
-    const result = match ? sign + match[0] : null;
-
-    console.log(result);
+    console.log(result); // Output: "-73.55"
 };
 
 const errorCallback = (error) => {
