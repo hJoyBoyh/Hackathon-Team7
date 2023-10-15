@@ -11,22 +11,19 @@
         <div class="logoHolder">
             <img src="../img/team7Logo.png" alt="">
         </div>
-        <form action="">
+        
             <div class="formHolder">
-                <form action="" id="formInscription">
+                <form action="../../signup" method="post" id="formInscription">
                     <div id="return"><h2>&#8592; Retour</h2></div>
                     <h1>Inscription</h1>
                     <div id="first-info">
                  <div>
-                    <input type="text" placeholder="Nom" id="nom">
+                    <input type="text" placeholder="Nom et Prenom" id="fullName" name="fullName">
                     <hr>
                  </div>
+               
                  <div>
-                    <input type="text" placeholder="Prénom" id="prenom">
-                    <hr>
-                 </div>
-                 <div>
-                    <input type="email" placeholder="Courriel" id="courrielInscription">
+                    <input type="email" placeholder="Courriel" id="email" name="email">
                     <hr>
                  </div>
                  <div class="submit-holder">
@@ -39,14 +36,15 @@
                         <ul>
                             <li>S’assurer que le mot de passe contient minumum 8 caratere</li>
                             <li>S’assurer que le mot de passe contient un caractere spéciaux(*,é%)etc.</li>
+                            <li>***S'assurer que vous garder en tête l'emplacement de votre inscription***</li>
                         </ul>
                     </div>
                     <div>
-                        <input type="password" placeholder="Mot de passe">
+                        <input type="password" placeholder="Mot de passe" >
                         <hr>
                      </div>
                      <div>
-                        <input type="password" placeholder="Confirmer le mot de passe">
+                        <input type="password" placeholder="Confirmer le mot de passe" id="password" name="password">
                         <hr>
                      </div>
                      <div class="submit-holder">
@@ -58,9 +56,10 @@
          
                  </form>
             </div>
-        </form>
+       
     </main>
     
 </body>
 <script src="main.js"></script>
+<script src="../../server.js"></script>
 </html>
