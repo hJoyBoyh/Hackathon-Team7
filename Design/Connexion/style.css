@@ -1,0 +1,108 @@
+body,html{
+    padding: 0;
+    margin: 0;
+    height: auto;
+    width: 100vw;
+}
+main{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+}
+.logoHolder{
+    height: 20%;
+    width: 100%;
+    text-align: center;
+}
+img{
+    height: 100px;
+    width: 220px;
+}
+
+form{
+    
+    height: auto;
+    width: 30vw;
+   border: 7px solid #0067A4;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    border-radius: 10%;
+    padding-bottom: 2%;
+}
+form>h1{
+    text-align: center;
+    width: 100%;
+}
+hr{
+    width: 100%;
+    height: 2px;
+    text-align: left;
+    background-color: #0067A4;
+}
+/*form connexion et inscription*/
+form>div,#first-info>div,#second-info>div,#courriel-recup-info>div{
+   display: flex;
+   flex-direction: column;
+   width: 80%;
+   margin-left: 10%;
+   text-align: center;
+   padding-top: 5%;
+   
+}
+input{
+    border: 0;
+}
+.submit-holder{
+    align-items: center;
+    
+}
+.submit{
+    height: 50px;
+    width: 150px;
+    
+    text-align: center;
+   align-items: center;
+   background-color: #0067A4;
+   color: white;
+   cursor: pointer;
+}
+div>p>a{
+    color: blue;
+}
+form>span{
+    width: 100%;
+    text-align: center;
+    color: blue;
+}
+/*form inscription*/
+
+#second-info{
+    display: none;
+  position: relative;
+  bottom: 40px;
+}
+ul>li{
+    text-align: left;
+}
+
+ul{
+    background-color: rgb(217, 217, 217);
+    background-color: rgba(217, 217, 217, 0.2);
+    backdrop-filter: blur(15px);
+}
+#return>h2{
+    margin: 0;
+    text-align: left;
+    position: relative;
+    bottom: 10px;
+}
+#return{
+    display: none;
+    cursor: pointer;
+}

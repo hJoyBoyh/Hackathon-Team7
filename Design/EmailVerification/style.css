@@ -1,0 +1,18 @@
+body,html{
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    width: 100vw;
+}
+main{
+height: 100%;
+width: 100%;
+display: flex;
+justify-content: center;
+align-items: center;
+}
+div{
+    height: 35%;
+    width: 50%;
+    border: 2px solid #0067A4;
+}
