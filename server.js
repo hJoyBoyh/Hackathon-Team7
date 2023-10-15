@@ -34,36 +34,39 @@ app.get("/", (req, res) => {
 });
 
 app.post("/signup", async (req, res) => {
-    const email = req.body.email;
-    const password = req.body.password;
-    const fullName = req.body.fullName;
-    if (fullName == "" || fullName == null) {
-      //// JV ECRIS
-    }
-    const position = req.body.position;
-    console.log(position)
+  const email = req.body.email;
+  const password = req.body.password;
+  const fullName = req.body.fullName;
+  const position = req.body.position;
+  if (position == "" || position == null) {
+    res.status(400).send(`Allow your location to be shared to continue. <a href="/">Return</a>`);
+    return
 
-    try {
-        await createUserWithEmailAndPassword(auth, email, password);
+  }
 
-        const usersCollection = collection(db, "Users");
-        const userDoc = doc(usersCollection);
+  console.log(position)
 
-        const userData = {
-            fullName: fullName,
-            email: email,
-            localisation: position
-        };
+  try {
+    await createUserWithEmailAndPassword(auth, email, password);
 
-        await setDoc(userDoc, userData);
+    const usersCollection = collection(db, "Users");
+    const userDoc = doc(usersCollection);
 
-        res.status(200).send("Logged and updated");
-    } catch (error) {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.error(errorCode, errorMessage);
-        res.status(401).send(`Failed: ${errorMessage}`);
-    }
+    const userData = {
+      fullName: fullName,
+      email: email,
+      localisation: position
+    };
+
+    await setDoc(userDoc, userData);
+
+    res.status(200).send("Logged and updated");
+  } catch (error) {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    console.error(errorCode, errorMessage);
+    res.status(401).send(`Failed: ${errorMessage}`);
+  }
 });
 
 app.post("/signin", (req, res) => {
