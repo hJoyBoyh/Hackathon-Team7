@@ -6,7 +6,6 @@ const firebase = require("firebase/app");
 const {
   getAuth,
   createUserWithEmailAndPassword,
-  updateProfile,
   signInWithEmailAndPassword,
   sendEmailVerification
 } = require("firebase/auth");
@@ -38,9 +37,14 @@ app.post("/signup", async (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
     const fullName = req.body.fullName;
+    if (fullName == "" || fullName == null) {
+      //// JV ECRIS
+    }
+    const position = req.body.position;
+    console.log(position)
 
     try {
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        await createUserWithEmailAndPassword(auth, email, password);
 
         const usersCollection = collection(db, "Users");
         const userDoc = doc(usersCollection);
@@ -48,6 +52,7 @@ app.post("/signup", async (req, res) => {
         const userData = {
             fullName: fullName,
             email: email,
+            localisation: position
         };
 
         await setDoc(userDoc, userData);
