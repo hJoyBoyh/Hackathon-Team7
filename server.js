@@ -1,4 +1,4 @@
-const { getFirestore, collection, doc, setDoc } = require("firebase/firestore");
+const { getFirestore, collection, doc, setDoc, getDoc, where, query, getDocs } = require("firebase/firestore");
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
@@ -8,7 +8,7 @@ const {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   sendEmailVerification,
-  updatePassword
+  sendPasswordResetEmail,
 } = require("firebase/auth");
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -30,6 +30,7 @@ const appFirebase = firebase.initializeApp(firebaseConfig);
 const db = getFirestore(appFirebase);
 const auth = getAuth();
 
+
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/client/index.html");
 });
@@ -40,12 +41,15 @@ app.post("/signup", async (req, res) => {
   const fullName = req.body.fullName;
   const position = req.body.position;
   if (position == "" || position == null) {
-    res.status(400).send(`Allow your location to be shared to continue. <a href="/">Return</a>`);
-    return
-
+    res
+      .status(400)
+      .send(
+        `Allow your location to be shared to continue. <a href="/">Return</a>`
+      );
+    return;
   }
 
-  console.log(position)
+  console.log(position);
 
   try {
     await createUserWithEmailAndPassword(auth, email, password);
@@ -56,12 +60,14 @@ app.post("/signup", async (req, res) => {
     const userData = {
       fullName: fullName,
       email: email,
-      localisation: position
+      localisation: position,
     };
 
     await setDoc(userDoc, userData);
 
-    res.status(200).send("Logged and updated");
+    
+    console.log("Logged and updated");
+    res.redirect(301, "/client/Connexion/index.html")
   } catch (error) {
     const errorCode = error.code;
     const errorMessage = error.message;
@@ -77,9 +83,12 @@ app.post("/signin", (req, res) => {
   signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       const user = userCredential.user;
-      sendEmailVerification(user)
-      .then(() => {
-        res.status(200).send("A verification link has been sent to your email. Please verify");
+      sendEmailVerification(user).then(() => {
+        res
+          .status(200)
+          .send(
+            "A verification link has been sent to your email. Please verify"
+          );
       });
     })
     .catch((error) => {
@@ -91,25 +100,45 @@ app.post("/signin", (req, res) => {
 });
 
 app.post("/resetPassword", (req, res) => {
-  const position = req.body.position;
-  const newPassword = req.body.newPassword;
-  try {
-    updatePassword(auth.currentUser, newPassword).then(() => {
-      firebase.firestore().collection('Users').get()
-        .then((snapshot) => {
+  const email = req.body.email;
+  const position = req.body.position
+  const usersCollection = collection(db, "Users");
 
-          snapshot.forEach((doc) => {
-            if (doc.email == auth.currentUser.email && doc.localisation == position) {
-              res.redirect(301, "") // PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE
-            }
+  // Check if the email exists in the Users collection
+  const query1 = where("email", "==", email);
+  const userQuery = query(collection(db, "Users"), query1);
+  const query12 = where("localisation", "==", position);
+  const userQuery1 = query(collection(db, "Users"), query12);
 
+  getDocs(userQuery1).then((querySnapshot) => {
+    
+  })
+
+  getDocs(userQuery)
+    .then((querySnapshot) => {
+      if (querySnapshot.size === 0) {
+        // Email does not exist in the Users collection
+        res.status(401).send("Email not found. Reset password failed.");
+      } else {
+        // Send a password reset email
+        sendPasswordResetEmail(auth, email)
+          .then(() => {
+            res.redirect(301, "/client/Connexion/index.html");
+          })
+          .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            console.error(errorCode, errorMessage);
+            res.status(401).send(`Reset password failed: ${errorMessage}`);
           });
-        });
-
+      }
     })
-  } catch (error) {
-
-  }
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.error(errorCode, errorMessage);
+      res.status(500).send(`Server error: ${errorMessage}`);
+    });
 });
 
 
