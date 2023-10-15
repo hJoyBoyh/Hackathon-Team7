@@ -99,41 +99,52 @@ app.post("/signin", (req, res) => {
     });
 });
 
-app.post("/resetPassword", (req, res) => {
+app.post("/resetPassword", async (req, res) => {
   const email = req.body.email;
-  const position = req.body.position
-  const usersCollection = collection(db, "Users");
+  const position = req.body.position;
 
-  // Check if the email exists in the Users collection
-  const query1 = where("email", "==", email);
-  const userQuery = query(collection(db, "Users"), query1);
+  try {
+    // Query the Users collection to check if the email and localisation exist
+    const usersCollection = collection(db, "Users");
 
-  getDocs(userQuery)
-    .then((querySnapshot) => {
-      if (querySnapshot.size === 0) {
-        // Email does not exist in the Users collection
-        res.status(401).send("Email not found. Reset password failed.");
-      } else {
-        // Send a password reset email
-        sendPasswordResetEmail(auth, email)
-          .then(() => {
-            res.redirect(301, "/client/Connexion/index.html");
-          })
-          .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            console.error(errorCode, errorMessage);
-            res.status(401).send(`Reset password failed: ${errorMessage}`);
-          });
-      }
-    })
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      console.error(errorCode, errorMessage);
-      res.status(500).send(`Server error: ${errorMessage}`);
-    });
+    const queryByEmail = query(usersCollection, where("email", "==", email));
+    const queryByLocalisation = query(usersCollection, where("localisation", "==", position));
+
+    const [emailSnapshot, localisationSnapshot] = await Promise.all([
+      getDocs(queryByEmail),
+      getDocs(queryByLocalisation)
+    ]);
+
+    if (!emailSnapshot || !localisationSnapshot) {
+      // Handle the case where one of the snapshots is undefined
+      res.status(500).send("Server error occurred.");
+      return;
+    }
+
+    if (emailSnapshot.empty || localisationSnapshot.empty) {
+      // Either the email or localisation does not exist
+      res.status(401).send("Email or localisation not found. Reset password failed.");
+    } else {
+      // Send a password reset email
+      sendPasswordResetEmail(auth, email)
+        .then(() => {
+          res.redirect(301, "/client/Connexion/index.html");
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.error(errorCode, errorMessage);
+          res.status(401).send(`Reset password failed: ${errorMessage}`);
+        });
+    }
+  } catch (error) {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    console.error(errorCode, errorMessage);
+    res.status(500).send(`Server error: ${errorMessage}`);
+  }
 });
+
 
 
 const port = 3000;
