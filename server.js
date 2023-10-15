@@ -107,12 +107,6 @@ app.post("/resetPassword", (req, res) => {
   // Check if the email exists in the Users collection
   const query1 = where("email", "==", email);
   const userQuery = query(collection(db, "Users"), query1);
-  const query12 = where("localisation", "==", position);
-  const userQuery1 = query(collection(db, "Users"), query12);
-
-  getDocs(userQuery1).then((querySnapshot) => {
-    
-  })
 
   getDocs(userQuery)
     .then((querySnapshot) => {
