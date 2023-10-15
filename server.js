@@ -1,4 +1,4 @@
-const { getFirestore, collection, doc, setDoc } = require("firebase/firestore");
+const { getFirestore, collection, doc, setDoc, updatePassword } = require("firebase/firestore");
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
@@ -27,8 +27,9 @@ firebase.initializeApp(firebaseConfig);
 
 const appFirebase = firebase.initializeApp(firebaseConfig);
 const db = getFirestore(appFirebase);
-
 const auth = getAuth();
+const user = auth.currentUser;
+
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/client/index.html");
 });
@@ -85,6 +86,30 @@ app.post("/signin", (req, res) => {
       res.status(401).send(`Login Failed: ${errorMessage}`);
     });
 });
+
+app.post("/resetPassword", (req, res) => {
+  const position = req.body.position;
+  const newPassword = req.body.newPassword;
+  try {
+    updatePassword(auth.currentUser, newPassword).then(() => {
+      firebase.firestore().collection('Users').get()
+        .then((snapshot) => {
+
+          snapshot.forEach((doc) => {
+            if (doc.email == auth.currentUser.email && doc.localisation == position) {
+              res.redirect(301, "") 
+            }
+
+          });
+        });
+      // Update successful.
+
+    })
+  } catch (error) {
+
+  }
+});
+
 
 const port = 3000;
 app.listen(port, () => {
