@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" href="/client/style/form.css">
+    <title>Document</title>
+</head>
+<body>
+    <main>
+        <div class="logoHolder">
+            <img src="/client/img/team7Logo.png" alt="">
+        </div>
+        <form action="">
+            <div class="formHolder">
+                <form action="../EmailVerification" id="formInscription" method="post">
+                    <input type="hidden" id="position" name="position" value="">
+                    <div id="return"><h2>&#8592; Retour</h2></div>
+                    <h1>Mot de passe oublié</h1>
+                   
+                <div id="courriel-recup-info" style="display: block;">
+                    
+                    <div>
+                        <ul>
+                            <li>Entre votre courriel de récupération</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <input type="email" placeholder="email" id="email">
+                        <hr>
+                     </div>
+                     <div class="submit-holder">
+                        <input type="submit" value="Envoyer" class="submit" id="btn-terminer">
+                    </div>
+        
+                </div>
+                 
+         
+                 </form>
+            </div>
+        </form>
+    </main>
+    
+</body>
+<script>
+    var res;
+
+    const successCallback = (position) => {
+        const number = position.coords.longitude;
+        const sign = number < 0 ? '-' : '+';
+        const numberString = Math.abs(number).toString();
+        const firstFiveDigits = numberString.substring(0, 6);
+        const result = sign + firstFiveDigits;
+        res = result;
+        console.log("RES", res);
+        document.getElementById("position").value = res;
+        console.log( document.getElementById("position").value, res)
+    };
+
+    const errorCallback = (error) => {
+        console.log(error);
+    };
+
+    window.onload = function () {
+        navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+    }
+</script>
+<script src="main.js"></script>
+</html>

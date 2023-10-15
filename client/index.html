@@ -1,65 +1,116 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Team 7</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="/client/style/navtemplate.css">
+    <link rel="stylesheet" href="/client/style/accueilStyle.css">
+    <title>Accueil</title>
 </head>
-
 <body>
-    <h1>Bienvenue Hackathon Bell 2023</h1>
+    <main>
+        <div class="navigation">
+            <div class="nav-section-1">
+                <h1>Menu</h1>
+            </div>
+            <div class="nav-section-2">
+                <nav>
+                    <ul>
+                        <button id="close-menu">X</button>
+                        <li class="nav-li"><a href="#">Accueil</a></li>
+                        <li class="nav-li"><a href="Profil/">Profil</a></li>
+                        <li class="nav-li"><a href="Connexion/">Connexion</a></li>
+                        <div id="nos-github" class="nav-li">
+                            <div>
+                                <p>Richard Gajda</p>
+                                <a href=""><img src="/client/img/github.png" alt="" class="img-github"></a>
+                            </div>
+                            <div>
+                                <p>Javen Vernet</p>
+                                <a href=""><img src="/client/img/github.png" alt="" class="img-github"></a>
+                            </div>
+                            <div>
+                                <p>Kenny Rigaud</p>
+                                <a href=""><img src="/client/img/github.png" alt="" class="img-github"></a>
+                            </div>
+                        </div>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        <header>
+            <img src="/client/img/team7Logo.png" alt="" srcset="" id="logo-nav">
+            <div id="menu"><i class="fa-solid fa-bars fa-2x"></i></div>
+        </header>
 
-    <h4>Sign up</h4>
-    <form action="signup" method="post">
-        <input type="hidden" id="position" name="position" value="">
+        <div id="content">
+            <div id="section-accueil">
+                <h1>Présentation du projet de l'équipe Team 7 pour le Hackathon 2023 de Bell</h1>
+                <div class="scroll">
+                    <div>
+                        <p>s</p>
+                        <p>c</p>
+                        <p>r</p>
+                        <p>o</p>
+                        <p>l</p>
+                        <p>l</p>
+                    </div>
+                    <div class="scroll-line"></div>
+                </div>
+            </div>
+            <div id="section-solution">
+                <h1>Notre Solution</h1>
+                <div class="solution">
+                    <p>Pour le thème de confidentialité et sécurité en ligne 
+                        nous avons décider de créer un solution d'authentification 
+                        multifactorielle qui à pour but de combiner plusieurs facteur, 
+                        dans notre cas l'authentification par email et l'authentification basée sur l'emplacement.</p>
+                    <p>Voici les technogies utilisée pour ce projet:</p>
 
-        <label for="fullName">Full Name:</label>
-        <input type="text" id="fullName" name="fullName" required><br><br>
-
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required><br><br>
-
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required><br><br>
-
-        <input type="submit" value="Login">
-    </form>
-
-    <form action="signin" method="post">
-        <label for="email">Email:</label>
-        <input type="email" id="email1" name="email" required><br><br>
-
-        <label for="password">Password:</label>
-        <input type="password" id="password1" name="password" required><br><br>
-
-        <input type="submit" value="Login">
-    </form>
-
-    <script>
-        var res;
+                </div>
+                <div class="table-matiere">
+                <table>
+                    <tr>
+                      <th>Front-End</th>
+                      <th>Back-End</th>
+                      <th>Database</th>
+                      <th>Gestion</th>
+                    </tr>
+                    <tr>
+                      <td>Javascript</td>
+                      <td>NodeJs</td>
+                      <td>Firebase</td>
+                      <td>github</td>
+                      
+                    </tr>
+                    <tr>
+                      <td>Html</td>
+                      <td></td>
+                      <td></td>
+                      <td>git</td>
+                    </tr>
+                    <tr>
+                      <td>Css</td>
+                      
+                    </tr>
+                    <tr>
+                      <td>Gsap</td>
+                    </tr>
+                    <tr></tr>
+                  </table>
+                </div>
+                <div class="commencer">
+                <p>Aller vers le menu pour commencer</p>
+                <button><a href="#menu">Commencer</a></button>
+            </div>
+            </div>
+        </div>
+    </main>
     
-        const successCallback = (position) => {
-            const number = position.coords.longitude;
-            const sign = number < 0 ? '-' : '+';
-            const numberString = Math.abs(number).toString();
-            const firstFiveDigits = numberString.substring(0, 6);
-            const result = sign + firstFiveDigits;
-            res = result;
-            console.log("RES", res);
-            document.getElementById("position").value = res;
-            console.log( document.getElementById("position").value, res)
-        };
-    
-        const errorCallback = (error) => {
-            console.log(error);
-        };
-    
-        window.onload = function () {
-            navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
-        }
-    </script>
     
 </body>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="./navAnimation.js"></script>
+<script src="./animationAccueil.js"></script>
 </html>
