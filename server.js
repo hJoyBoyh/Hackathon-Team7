@@ -1,4 +1,4 @@
-const { getFirestore, collection, doc, setDoc, updatePassword } = require("firebase/firestore");
+const { getFirestore, collection, doc, setDoc } = require("firebase/firestore");
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
@@ -7,7 +7,8 @@ const {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  sendEmailVerification
+  sendEmailVerification,
+  updatePassword
 } = require("firebase/auth");
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -28,7 +29,6 @@ firebase.initializeApp(firebaseConfig);
 const appFirebase = firebase.initializeApp(firebaseConfig);
 const db = getFirestore(appFirebase);
 const auth = getAuth();
-const user = auth.currentUser;
 
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/client/index.html");
@@ -77,7 +77,10 @@ app.post("/signin", (req, res) => {
   signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       const user = userCredential.user;
-      res.status(200).send("Singed in");
+      sendEmailVerification(user)
+      .then(() => {
+        res.status(200).send("A verification link has been sent to your email. Please verify");
+      });
     })
     .catch((error) => {
       const errorCode = error.code;
@@ -97,12 +100,11 @@ app.post("/resetPassword", (req, res) => {
 
           snapshot.forEach((doc) => {
             if (doc.email == auth.currentUser.email && doc.localisation == position) {
-              res.redirect(301, "") 
+              res.redirect(301, "") // PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE
             }
 
           });
         });
-      // Update successful.
 
     })
   } catch (error) {
