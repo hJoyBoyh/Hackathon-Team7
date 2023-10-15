@@ -3,16 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../style/form.css">
+    <link rel="stylesheet" href="/client/style/form.css">
     <title>Inscription</title>
 </head>
 <body>
    <main>
     <div class="logoHolder">
-        <img src="../img/team7Logo.png" alt="">
+        <img src="/client/img/team7Logo.png" alt="">
     </div>
     <div class="formHolder">
         <form action="/signin" id="formConnexion" method="post">
+            <input type="hidden" id="position" name="position" value="">
            <h1>Connnexion</h1>
         <div>
             <label for="email" style="display: none;"></label>
@@ -41,6 +42,29 @@
    </main>
     
 </body>
+<script>
+    var res;
+
+    const successCallback = (position) => {
+        const number = position.coords.longitude;
+        const sign = number < 0 ? '-' : '+';
+        const numberString = Math.abs(number).toString();
+        const firstFiveDigits = numberString.substring(0, 6);
+        const result = sign + firstFiveDigits;
+        res = result;
+        console.log("RES", res);
+        document.getElementById("position").value = res;
+        console.log( document.getElementById("position").value, res)
+    };
+
+    const errorCallback = (error) => {
+        console.log(error);
+    };
+
+    window.onload = function () {
+        navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+    }
+</script>
 <script src="main.js"></script>
 
 
